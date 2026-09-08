@@ -1,0 +1,30 @@
+RUSNAK - wersja na GitHub Pages
+=================================================================
+
+Ta paczka ma linki WZGLEDNE, wiec dziala i w korzeniu domeny, i w podkatalogu
+(np. https://uzytkownik.github.io/nazwa-repo/). Wersja z site/ ma linki
+bezwzgledne i na Pages w podkatalogu sie rozjezdza - arkusz stylow nie
+istnieje pod tym adresem.
+
+CO ZROBIC
+- Wrzuc do repozytorium CALA ZAWARTOSC tego folderu, nie sam folder.
+  W korzeniu repo maja lezec: index.html, .nojekyll, assets/, piekarnia/ itd.
+- Settings -> Pages -> Source: Deploy from a branch, branch main, folder / (root).
+- Plik .nojekyll musi byc w repo. Zaczyna sie od kropki, wiec latwo go zgubic:
+  wiele okien "przeciagnij pliki" i klientow FTP ukrywa pliki z kropka.
+  Bez niego Jekyll przetwarza katalog po swojemu.
+
+CZEGO SIE SPODZIEWAC
+- Adresy maja koncowke /index.html - to cena za to, ze paczka dziala wszedzie.
+  Na wlasnym serwerze pod docelowa domena uzywamy site/, gdzie adresy sa ladne.
+- robots.txt nadal zamyka strone przed wyszukiwarkami. Na podglad dla klienta
+  to jest wlasnie to, czego chcemy - strona ma jeszcze plakietki brakow tresci.
+- Znaczniki og:image i adresy kanoniczne wskazuja na docelowa domene
+  www.piekarniarusnak.pl, wiec podglad linku na Facebooku czy Slacku nie
+  pokaze miniatury, dopoki domena nie stanie. Na dzialanie strony to nie wplywa.
+
+AKTUALIZACJA
+    cd RUSNAK/www
+    node build.mjs
+    node build-offline.mjs --pages
+i wrzucasz zawartosc www/pages/ jeszcze raz.
