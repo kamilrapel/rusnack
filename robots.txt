@@ -1,0 +1,5 @@
+# Srodowisko testowe. Przed publikacja zamienic na wersje produkcyjna.
+User-agent: *
+Disallow: /
+
+Sitemap: https://www.piekarniarusnak.pl/sitemap.xml
