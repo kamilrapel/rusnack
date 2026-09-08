@@ -384,7 +384,7 @@ main > .rk-pagehero:first-child{padding-top:132px}
 .rk-card__phone{font-weight:600;margin-bottom:14px;line-height:1.7}
 .rk-card__phone a{box-shadow:inset 0 -1px 0 var(--line-soft)}
 .rk-card__phone a:hover{color:var(--accent-deep)}
-.rk-card .rk-img{margin-bottom:18px}
+.rk-card .rk-imgbox,.rk-card .rk-img--empty{margin-bottom:18px}
 .rk-card .rk-link{margin-top:auto;align-self:flex-start}
 .rk-card--product{padding:18px 18px 20px}
 .rk-card--product .rk-card__title{font-size:16.5px;margin-bottom:4px}
@@ -417,7 +417,27 @@ body.rk-clean .rk-badge--soft{display:none}
 .rk-card__meta dd{color:var(--ink-mute)}
 
 /* ==================== OBRAZY ==================== */
-.rk-img{width:100%;border-radius:12px;object-fit:cover;background:var(--line)}
+.rk-img{width:100%;height:100%;border-radius:12px;object-fit:cover;background:var(--line);display:block}
+
+/* Ramka zdjecia: przycina najazd i trzyma proporcje zamiast obrazka. */
+.rk-imgbox{
+  display:block;position:relative;overflow:hidden;border-radius:12px;
+  background:var(--line);line-height:0;
+}
+.rk-imgbox .rk-img{border-radius:0;transition:transform 640ms var(--ease-soft)}
+/* Delikatny najazd. Reaguje na hover samego zdjecia i calej karty, zeby
+   kafel z linkiem zywil sie jako jedna calosc. */
+.rk-imgbox:hover .rk-img,
+a:hover > .rk-imgbox .rk-img,
+a:hover .rk-imgbox .rk-img,
+.rk-card:hover .rk-imgbox .rk-img,
+.rk-gate:hover .rk-imgbox .rk-img{transform:scale(1.045)}
+
+@media (prefers-reduced-motion:reduce){
+  .rk-imgbox .rk-img{transition:none}
+  .rk-imgbox:hover .rk-img,a:hover .rk-imgbox .rk-img,
+  .rk-card:hover .rk-imgbox .rk-img,.rk-gate:hover .rk-imgbox .rk-img{transform:none}
+}
 .rk-img--empty{
   display:flex;align-items:center;justify-content:center;text-align:center;
   padding:20px;background:transparent;
