@@ -450,4 +450,159 @@
       }
     });
   })();
+
+  /* ---------- Zgoda na cookies ----------
+     Do czasu decyzji strona nie laduje niczego z serwerow obcych.
+     Decyzja siedzi w localStorage - to nie jest cookie i nie jedzie
+     na serwer, wiec sam zapis wyboru zgody nie wymaga. */
+  var ZGODA = (function () {
+    var KLUCZ = 'rusnak-zgoda';
+    var WERSJA = 1;
+    var WAZNOSC = 365 * 24 * 60 * 60 * 1000;
+    var stan = null;
+
+    function odczytaj() {
+      try {
+        var raw = window.localStorage.getItem(KLUCZ);
+        if (!raw) return null;
+        var d = JSON.parse(raw);
+        if (d.wersja !== WERSJA) return null;
+        if (!d.data || (Date.now() - d.data) > WAZNOSC) return null;
+        return d;
+      } catch (e) { return null; }   /* tryb prywatny, blokada zapisu itd. */
+    }
+
+    function zapisz(kategorie) {
+      stan = { wersja: WERSJA, data: Date.now(), kategorie: kategorie };
+      try { window.localStorage.setItem(KLUCZ, JSON.stringify(stan)); } catch (e) {}
+      document.dispatchEvent(new CustomEvent('rk:zgoda', { detail: stan }));
+      if (window.dataLayer) {
+        window.dataLayer.push({ event: 'cookie_consent', kategorie: kategorie.join(',') });
+      }
+    }
+
+    stan = odczytaj();
+
+    return {
+      zdecydowano: function () { return !!stan; },
+      ma: function (kat) { return !!stan && stan.kategorie.indexOf(kat) !== -1; },
+      ustaw: zapisz,
+      wyczysc: function () {
+        stan = null;
+        try { window.localStorage.removeItem(KLUCZ); } catch (e) {}
+      }
+    };
+  })();
+
+  /* ---------- Okienko cookies ---------- */
+  (function () {
+    var box = $('#rk-cookies');
+    if (!box) return;
+
+    var ustawienia = $('[data-cookies-ustawienia]', box);
+    var btnZapisz = $('[data-cookies="zapisz"]', box);
+    var btnUstawienia = $('[data-cookies="ustawienia"]', box);
+    var ostatnioAktywny = null;
+
+    function pokaz(zUstawieniami) {
+      ostatnioAktywny = document.activeElement;
+      box.hidden = false;
+      if (zUstawieniami) rozwin();
+      /* fokus na naglowek, zeby czytnik ekranu wiedzial, co sie pojawilo */
+      var h = $('.rk-cookies__title', box);
+      if (h) { h.setAttribute('tabindex', '-1'); h.focus({ preventScroll: true }); }
+    }
+
+    function schowaj() {
+      box.hidden = true;
+      if (ostatnioAktywny && ostatnioAktywny.focus) ostatnioAktywny.focus({ preventScroll: true });
+    }
+
+    function rozwin() {
+      ustawienia.hidden = false;
+      btnZapisz.hidden = false;
+      btnUstawienia.hidden = true;
+    }
+
+    function wybrane() {
+      return $$('input[type="checkbox"]', ustawienia)
+        .filter(function (i) { return i.checked; })
+        .map(function (i) { return i.value; });
+    }
+
+    $$('[data-cookies]', box).forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var akcja = btn.getAttribute('data-cookies');
+        if (akcja === 'ustawienia') { rozwin(); return; }
+
+        var kategorie;
+        if (akcja === 'wszystko') {
+          kategorie = $$('input[type="checkbox"]', ustawienia).map(function (i) { return i.value; });
+        } else if (akcja === 'niezbedne') {
+          kategorie = ['niezbedne'];
+        } else {
+          kategorie = wybrane();
+          if (kategorie.indexOf('niezbedne') === -1) kategorie.push('niezbedne');
+        }
+        ZGODA.ustaw(kategorie);
+        schowaj();
+      });
+    });
+
+    /* ponowne otwarcie - link w stopce albo gdziekolwiek indziej */
+    $$('[data-cookies-otworz]').forEach(function (el) {
+      el.addEventListener('click', function (e) {
+        e.preventDefault();
+        /* odswiez stan przelacznikow zgodnie z zapisana decyzja */
+        $$('input[type="checkbox"]', ustawienia).forEach(function (i) {
+          if (!i.disabled) i.checked = ZGODA.ma(i.value);
+        });
+        pokaz(true);
+      });
+    });
+
+    if (!ZGODA.zdecydowano()) pokaz(false);
+  })();
+
+  /* ---------- Mapa ----------
+     Po zgodzie laduje sie sama. Bez zgody zostaje przycisk, ktory
+     wlacza mape tylko na tej jednej stronie, bez zapisywania decyzji. */
+  (function () {
+    function wstaw(box) {
+      var src = box.getAttribute('data-map-src');
+      if (!src) return;
+      var frame = document.createElement('iframe');
+      frame.className = 'rk-map__frame';
+      frame.src = src;
+      frame.title = box.getAttribute('data-map-title') || 'Mapa';
+      frame.loading = 'lazy';
+      frame.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
+      frame.setAttribute('allowfullscreen', '');
+      if (box.parentNode) box.parentNode.replaceChild(frame, box);
+      return frame;
+    }
+
+    function odswiez() {
+      if (!ZGODA.ma('mapy')) return;
+      $$('.rk-map__consent').forEach(wstaw);
+    }
+
+    $$('.rk-map__consent').forEach(function (box) {
+      var btn = $('[data-map-load]', box);
+      if (!btn) return;
+      btn.addEventListener('click', function () {
+        var frame = wstaw(box);
+        if (frame) {
+          frame.setAttribute('tabindex', '-1');
+          frame.focus({ preventScroll: true });
+        }
+        if (window.dataLayer) window.dataLayer.push({ event: 'map_consent_accept' });
+      });
+    });
+
+    odswiez();
+    document.addEventListener('rk:zgoda', odswiez);
+  })();
+
+
 })();
