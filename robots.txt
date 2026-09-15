@@ -1,4 +1,4 @@
-# Srodowisko testowe. Przed publikacja zamienic na wersje produkcyjna.
+# Srodowisko robocze. Wersje otwarta buduje: node build.mjs --produkcja
 User-agent: *
 Disallow: /
 
