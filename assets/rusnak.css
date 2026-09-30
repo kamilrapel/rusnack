@@ -380,7 +380,23 @@ main > .rk-pagehero:first-child{padding-top:132px}
 .rk-split{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start}
 
 /* ==================== BRAMY ==================== */
-.rk-gates{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+/* ---------- Kafle wejsciowe ----------
+   Siatka ma SZESC kolumn, a kazdy kafel zajmuje dwie. Przy trzech kaflach
+   daje to dokladnie ten sam uklad co wczesniej, ale pozwala domknac wiersz,
+   ktory sie nie zapelnil. Po zdjeciu karty "Dla firm" na stronie glownej
+   zostaly dwa kafle i staly przy lewej krawedzi, z pusta trzecia kolumna -
+   pod wysrodkowanym logo i naglowkiem wygladalo to na usterke, bo nia bylo. */
+.rk-gates{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:20px}
+.rk-gates > .rk-gate{grid-column:span 2}
+
+/* dwa kafle - para na srodku, szerokosc kafla bez zmian */
+.rk-gates--2 > .rk-gate:nth-child(1){grid-column:2 / 4}
+.rk-gates--2 > .rk-gate:nth-child(2){grid-column:4 / 6}
+/* cztery kafle - czwarty nie zostaje sam przy lewej krawedzi */
+.rk-gates--4 > .rk-gate:nth-child(4){grid-column:3 / 5}
+/* piec kafli - dwa z drugiego wiersza wysrodkowane pod trzema z pierwszego */
+.rk-gates--5 > .rk-gate:nth-child(4){grid-column:2 / 4}
+.rk-gates--5 > .rk-gate:nth-child(5){grid-column:4 / 6}
 .rk-gate{
   display:flex;flex-direction:column;background:var(--surface);color:var(--ink);
   border-radius:var(--r-card);padding:32px 28px 28px;
@@ -774,7 +790,12 @@ a:hover .rk-imgbox .rk-img,
   .rk-nav__toggle.is-open{position:fixed;top:16px;right:16px;z-index:201}
   @keyframes rk-fade{from{opacity:0}to{opacity:1}}
 
-  .rk-gates,.rk-grid--3,.rk-steps{grid-template-columns:1fr 1fr}
+  .rk-gates,.rk-grid--3,.rk-steps{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .rk-gates > .rk-gate:nth-child(n){grid-column:auto}
+  /* przy dwoch kolumnach nieparzysty ostatni kafel bierze cala szerokosc -
+     inaczej zostaje sam przy lewej krawedzi z dziura obok */
+  .rk-gates--3 > .rk-gate:nth-child(3),
+  .rk-gates--5 > .rk-gate:nth-child(5){grid-column:1 / -1}
   .rk-media,.rk-split{grid-template-columns:1fr;gap:28px}
   .rk-media--flip .rk-media__text{order:0}
   .rk-hero__sygnet{right:-18vw;bottom:-8vh;width:86vw}
@@ -783,6 +804,7 @@ a:hover .rk-imgbox .rk-img,
 @media (max-width:720px){
   :root{--gutter:20px}
   .rk-gates,.rk-grid--3,.rk-grid--2,.rk-steps,.rk-footer__addresses,.rk-footer__top{grid-template-columns:1fr}
+  .rk-gates > .rk-gate:nth-child(n){grid-column:auto}
   .rk-grid--products{grid-template-columns:1fr 1fr}
   .rk-hero{padding:118px var(--gutter) 72px;min-height:auto}
   .rk-hero__logo{width:86vw}
@@ -907,7 +929,7 @@ a:hover .rk-imgbox .rk-img,
 /* Etykieta nad kartami - drobny podpis interfejsu, wiec wersaliki. */
 .rk-eyebrow{font-weight:600;font-size:11.5px;letter-spacing:var(--track-label);
   text-transform:uppercase;color:var(--accent-deep);margin-bottom:clamp(14px,2vw,22px)}
-.rk-eyebrow--center{text-align:left}
+.rk-eyebrow--center{text-align:center}
 .rk-section--wybor{padding-top:clamp(20px,3vh,40px);padding-bottom:clamp(56px,8vh,104px)}
 
 @media (max-width:820px){
