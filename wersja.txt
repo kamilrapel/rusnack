@@ -1,6 +1,0 @@
-RUSNAK - znacznik wersji paczki
-2026-10-23 20:16 robocza css:ef84ce9c js:f1a0eaab
-
-Ten sam znacznik siedzi w zrodle kazdej strony jako <meta name="rk-build">.
-Jesli na serwerze widzisz inny - patrzysz na starsza paczke albo na kopie
-z pamieci przegladarki (wtedy pomaga odswiezenie z pominieciem cache).

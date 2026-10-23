@@ -1,5 +1,0 @@
-# Srodowisko robocze. Wersje otwarta buduje: node build.mjs --produkcja
-User-agent: *
-Disallow: /
-
-Sitemap: https://www.piekarniarusnak.pl/sitemap.xml
