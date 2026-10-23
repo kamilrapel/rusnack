@@ -476,6 +476,42 @@ body.rk-clean .rk-badge--soft{display:none}
   .rk-speclist dt{padding-top:0}
 }
 
+/* ---------- Tabele (brief Etapu 1: wielkosci tortow, menu Bistro) ----------
+   Na telefonie (375 px) tabela menu z trzema kolumnami nie miesci sie
+   czytelnie, wiec kazdy wiersz sklada sie w blok: kategoria jako naglowek,
+   opis i pozycje pod nia. Naglowek tabeli znika - etykiety niosa komorki. */
+.rk-tabela{width:100%;border-collapse:collapse;margin:0 0 clamp(28px,4vw,44px);font-size:15.5px;line-height:1.55}
+.rk-tabela th,.rk-tabela td{text-align:left;vertical-align:top;padding:12px 16px 12px 0;border-bottom:1px solid var(--line)}
+.rk-tabela thead th{font-weight:600;font-size:11.5px;letter-spacing:var(--track-label);text-transform:uppercase;color:var(--accent-deep);padding-top:0}
+.rk-tabela tbody th{font-weight:600;color:var(--ink);white-space:nowrap;padding-right:28px}
+.rk-tabela td{color:var(--ink-soft)}
+.rk-tabela--menu tbody th{min-width:150px}
+.rk-tabela--menu td:nth-child(2){min-width:180px;max-width:260px}
+@media (max-width:720px){
+  .rk-tabela--menu thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  .rk-tabela--menu tr{display:block;padding:14px 0;border-bottom:1px solid var(--line)}
+  .rk-tabela--menu th,.rk-tabela--menu td{display:block;border:0;padding:2px 0;white-space:normal;max-width:none}
+  .rk-tabela--menu td:nth-child(2){color:var(--ink-mute);font-size:14px}
+}
+/* Akapit pod krokami procesu i lista "krotko" */
+.rk-steps + .rk-prose{margin-top:clamp(20px,3vw,30px)}
+.rk-lista{list-style:none;padding:0;margin:0 0 18px;display:grid;gap:10px;font-size:16.5px;line-height:1.6;color:var(--ink-soft)}
+.rk-lista li{padding-left:18px;position:relative}
+.rk-lista li::before{content:'';position:absolute;left:0;top:.72em;width:7px;height:7px;border-radius:50%;background:var(--accent)}
+.rk-lista strong{color:var(--ink)}
+.rk-lista--krotko{margin-top:18px}
+.rk-lista-grup{display:grid;gap:0;border-top:1px solid var(--line);margin-bottom:22px}
+.rk-lista-grup__row{display:grid;grid-template-columns:minmax(150px,210px) minmax(0,1fr);gap:clamp(12px,2.5vw,32px);padding:16px 0;border-bottom:1px solid var(--line)}
+.rk-lista-grup dt{font-weight:600;font-size:12px;letter-spacing:var(--track-label);text-transform:uppercase;color:var(--accent-deep);padding-top:3px}
+.rk-lista-grup dd{margin:0;font-size:16px;line-height:1.6;color:var(--ink-soft)}
+.rk-lista-grup dd .rk-small{margin-top:6px}
+@media (max-width:640px){ .rk-lista-grup__row{grid-template-columns:1fr;gap:6px} }
+.rk-prose--lista{font-size:16.5px;line-height:1.75}
+.rk-prose--nota{margin-top:22px;font-size:14.5px;color:var(--ink-mute)}
+.rk-card--kontakt .rk-small{margin-top:14px;color:var(--ink-mute)}
+.rk-card__desc--godziny{font-style:italic}
+.rk-faq__grupa{margin-top:clamp(34px,5vw,56px);margin-bottom:6px;font-size:clamp(24px,2.6vw,34px)}
+.rk-faq__grupa:first-child{margin-top:0}
 /* Zdanie prowadzace pod naglowkiem albo pod siatka kategorii. */
 .rk-prose--lead{font-size:18px;color:var(--ink)}
 .rk-lead--pod{margin-top:clamp(20px,3vw,32px);font-size:16.5px;line-height:1.6;
@@ -518,6 +554,12 @@ a:hover .rk-imgbox .rk-img,
 
 /* ==================== BLOK TEKST + OBRAZ ==================== */
 .rk-media{display:grid;grid-template-columns:1.02fr .98fr;gap:44px;align-items:center}
+/* blok bez zdjecia: jedna kolumna tekstu o czytelnej szerokosci wiersza */
+.rk-media--tekst{grid-template-columns:minmax(0,1fr);max-width:68ch}
+.rk-media--tekst .rk-prose{max-width:none}
+/* hero strony glownej: dwa przyciski i pasek pod nimi (brief 19.10, sekcja 4) */
+.rk-actions--center{justify-content:center;margin-top:clamp(18px,2.4vh,28px)}
+.rk-hero__pasek{margin-top:clamp(18px,2.4vh,28px);font-weight:600;font-size:11.5px;letter-spacing:var(--track-label);text-transform:uppercase;color:var(--accent-deep)}
 .rk-media--flip .rk-media__text{order:2}
 .rk-media__text .rk-title{margin-bottom:20px}
 
@@ -708,9 +750,15 @@ a:hover .rk-imgbox .rk-img,
 
 /* ==================== STOPKA ==================== */
 .rk-footer{padding:clamp(48px,6vw,80px) 0 36px;border-top:1px solid var(--line);margin-top:8px}
-.rk-footer__top{display:grid;grid-template-columns:1.1fr repeat(4,1fr);gap:32px;margin-bottom:48px}
+/* Gorny rzad stopki (brief 7.4): marka + Piekarnia + Bistro.
+   Dolny rzad: Na skroty + Informacje + Jestesmy tez tutaj. */
+.rk-footer__top{display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:32px;margin-bottom:40px}
+.rk-footer__claim{max-width:26ch;line-height:1.5;text-transform:none;letter-spacing:0;font-size:14px;color:var(--ink-soft)}
+.rk-footer__hours{display:grid;gap:3px;margin-top:8px;font-size:14px;color:var(--ink-soft)}
+.rk-footer__hours div{display:flex;justify-content:space-between;gap:12px;max-width:280px}
+.rk-footer__hours dt{color:var(--ink-mute)}
+.rk-footer__hours dd{margin:0;font-variant-numeric:tabular-nums;color:var(--ink)}
 .rk-footer__sygnet{width:44px;color:var(--accent);margin-bottom:16px}
-.rk-footer__claim{font-weight:500;font-size:12px;letter-spacing:var(--track-tagline);text-transform:uppercase;color:var(--accent-deep)}
 .rk-footer__col-h{font-weight:600;font-size:11.5px;letter-spacing:var(--track-label);text-transform:uppercase;margin-bottom:14px;color:var(--accent-deep)}
 .rk-footer__col ul{display:grid;gap:9px;font-size:14.5px;color:var(--ink-soft)}
 .rk-footer__col a:hover{color:var(--ink);box-shadow:inset 0 -1px 0 var(--ink)}
